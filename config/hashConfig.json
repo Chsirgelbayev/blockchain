@@ -1,0 +1,7 @@
+{
+  "PASSWORD_LENGTH": 256,
+  "SALT_LENGTH": 19,
+  "ITERATIONS": 1000,
+  "DIGEST": "sha256",
+  "BYTE_TO_STRING_ENCODING": "hex"
+}
