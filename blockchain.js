@@ -83,7 +83,7 @@ for (i = 0; i < 10; i++) {
 }
 
 module.exports = {
-	newBlock,
-	blockchain,
-	calculateHash
-}
+  newBlock,
+  blockchain,
+  calculateHash,
+};
