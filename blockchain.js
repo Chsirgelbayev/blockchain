@@ -1,89 +1,136 @@
-const crypto = require("crypto");
+const crypto = require('crypto');
 
 const {
-  PASSWORD_LENGTH,
-  SALT_LENGTH,
-  ITERATIONS,
-  DIGEST,
-  BYTE_TO_STRING_ENCODING,
-} = require("./config/hashConfig.json");
+   PASSWORD_LENGTH,
+   SALT_LENGTH,
+   ITERATIONS,
+   DIGEST,
+   BYTE_TO_STRING_ENCODING,
+} = require('./config/hashConfig.json');
 
 class Block {
-  constructor(index, lastData = [], timestamp, previousHash, hash) {
-    const block = this;
+   constructor(index, timestamp, data, previousHash) {
+      const block = this;
 
-    block.index = index;
-    block.lastData = lastData;
-    block.timestamp = timestamp;
-    block.previousHash = previousHash;
-    block.hash = hash.toString();
-  }
+      block.index = index;
+      block.timestamp = timestamp;
+      block.data = data;
+      block.previousHash = previousHash;
+      block.hash = this.calculateHash();
+			block.nonce = 0;
+   }
+
+   calculateHash() {
+      const salt = crypto
+         .randomBytes(SALT_LENGTH)
+         .toString(BYTE_TO_STRING_ENCODING);
+
+      return crypto
+         .pbkdf2Sync(
+						this.index + this.timestamp + this.previousHash + JSON.stringify(this.data) + this.nonce,
+            salt,
+            ITERATIONS,
+            PASSWORD_LENGTH,
+            DIGEST
+         )
+         .toString(BYTE_TO_STRING_ENCODING);
+   }
+}
+
+class Blockchain {
+   constructor() {
+      this.blockchain = [this.createFirstBlock()];
+   }
+   createFirstBlock() {
+      return new Block(0, "0/0/0", "genesis block", "0");
+   }
+   getLatestBlock() {
+      return this.blockchain[this.blockchain.length - 1];
+   }
+   addNewBlock(newBlock) {
+      const previousBlock = getLatestBlock();
+
+			newBlock.previousHash = this.getLatestBlock().hash;
+
+      newBlock.hash = newBlock.calculateHash();
+
+      this.block1chain.push(newBlock);
+   }
 }
 
 const calculateHash = (
-  nextIndex,
-  previousBlockHash,
-  nextTimestamp,
-  lastBlockData
+   nextIndex,
+   previousBlockHash,
+   nextTimestamp,
+   lastBlockData
 ) => {
-  const salt = crypto
-    .randomBytes(SALT_LENGTH)
-    .toString(BYTE_TO_STRING_ENCODING);
+   const salt = crypto
+      .randomBytes(SALT_LENGTH)
+      .toString(BYTE_TO_STRING_ENCODING);
 
-  return (hash = crypto
-    .pbkdf2Sync(
-      nextIndex + previousBlockHash + nextTimestamp + lastBlockData,
-      salt,
-      ITERATIONS,
-      PASSWORD_LENGTH,
-      DIGEST
-    )
-    .toString(BYTE_TO_STRING_ENCODING));
+   return (hash = crypto
+      .pbkdf2Sync(
+         nextIndex + previousBlockHash + nextTimestamp + lastBlockData,
+         salt,
+         ITERATIONS,
+         PASSWORD_LENGTH,
+         DIGEST
+      )
+      .toString(BYTE_TO_STRING_ENCODING));
 };
 
-const getFirstBlock = () => {
-  return new Block(
-    0,
-    "my new block!!",
-    "0",
-    1465154705,
-    "816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7"
-  );
-};
+let thecoin = new Blockchain();
 
-const blockchain = [getFirstBlock()];
+// thecoin.addNewBlock(
+//    new Block(1, '06/04/2021', {
+//       sender: 'Rabin Yitzack',
+//       recipient: 'Loyd Eve',
+//       quantity: 20,
+//    })
+// );
 
-let CurrrenBlock = blockchain[0];
 
-const getLatestBlock = () => blockchain[blockchain.length - 1];
 
-const newBlock = (lastBlockData) => {
-  const previousBlock = getLatestBlock();
-  const nextIndex = previousBlock.index + 1;
-  const nextTimestamp = new Date().getTime() / 1000;
-  const nextHash = calculateHash(
-    nextIndex,
-    previousBlock.hash,
-    nextTimestamp,
-    lastBlockData
-  );
+console.log(JSON.stringify(thecoin));
 
-  return new Block(
-    nextIndex,
-    lastBlockData,
-    nextTimestamp,
-    previousBlock.hash,
-    nextHash
-  );
-};
+// for (i = 0; i < 3; i++) {
+//    CurrrenBlock = newBlock(CurrrenBlock);
+//    blockchain.push(CurrrenBlock);
+//    console.log(blockchain);
+// }
 
-for (i = 0; i < 10; i++) {
-  CurrrenBlock = newBlock(CurrrenBlock);
-  blockchain.push(CurrrenBlock);
-}
+// const blockchain = [getFirstBlock()];
 
-module.exports = {
-  newBlock,
-  blockchain,
-  calculateHash,
-};
+// let CurrrenBlock = blockchain[0];
+
+// const getLatestBlock = () => blockchain[blockchain.length - 1];
+
+// const newBlock = (lastBlockData) => {
+//    const previousBlock = getLatestBlock();
+//    const nextIndex = previousBlock.index + 1;
+//    const nextTimestamp = new Date().getTime() / 1000;
+//    const nextHash = calculateHash(
+//       nextIndex,
+//       previousBlock.hash,
+//       nextTimestamp,
+//       lastBlockData
+//    );
+
+//    return new Block(
+//       nextIndex,
+//       lastBlockData,
+//       nextTimestamp,
+//       previousBlock.hash,
+//       nextHash
+//    );
+// };
+
+// for (i = 0; i < 3; i++) {
+//    CurrrenBlock = newBlock(CurrrenBlock);
+//    blockchain.push(CurrrenBlock);
+//    console.log(blockchain);
+// }
+
+// module.exports = {
+//   blockchain,
+// };
