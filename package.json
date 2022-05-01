@@ -4,14 +4,18 @@
   "description": "Crypto",
   "main": "main.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "prod": "cross-env NODE_ENV=production node server.js",
+    "dev": "cross-env NODE_ENV=development nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Chingiz",
   "license": "ISC",
   "dependencies": {
+    "colors": "^1.4.0",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.0.0",
-    "express": "^4.17.3"
+    "express": "^4.17.3",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
