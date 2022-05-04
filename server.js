@@ -6,8 +6,7 @@ const dotenv = require("dotenv");
 dotenv.config({ path: "./config/config.env" });
 const { PORT, NODE_ENV } = process.env;
 const { errorHandler } = require("./middleware/errorHadler");
-const blocks = require("./routes/blocks");
-
+const blockchain = require("./routes/blocks");
 
 const server = () => {
     const app = express();
@@ -16,7 +15,7 @@ const server = () => {
         app.use(morgan("dev"));
     }
 
-    app.use("/blocks", blocks).use(errorHandler);
+    app.use("/blockchain", blockchain).use(errorHandler);
 
     app.listen(PORT || 5200, () =>
         console.log(
