@@ -24,7 +24,6 @@ router.route("/:id").get((req, res, next) => {
     blockchain.forEach((obj) => {
         if (obj.index === reqNumId) {
             res.status(200).json({ success: true, obj });
-
         }
     });
 });
