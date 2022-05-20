@@ -1,7 +1,7 @@
 {
-  "PASSWORD_LENGTH": 18,
-  "SALT_LENGTH": 8,
-  "ITERATIONS": 1000,
-  "DIGEST": "sha256",
-  "BYTE_TO_STRING_ENCODING": "hex"
+    "PASSWORD_LENGTH": 18,
+    "SALT_LENGTH": 8,
+    "ITERATIONS": 1000,
+    "DIGEST": "sha256",
+    "BYTE_TO_STRING_ENCODING": "hex"
 }

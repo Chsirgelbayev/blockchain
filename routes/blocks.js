@@ -3,8 +3,8 @@ const router = express.Router();
 
 const { ErrorResponce } = require("../middleware/errorHadler");
 
-const bitcoin = require("../models/blockchain");
-const { blockchain } = bitcoin;
+const Ethereum = require("../models/blockchain");
+const { blockchain } = Ethereum;
 
 router.route("/").get((req, res, next) => {
     if (!blockchain.length) {
@@ -24,6 +24,7 @@ router.route("/:id").get((req, res, next) => {
     blockchain.forEach((obj) => {
         if (obj.index === reqNumId) {
             res.status(200).json({ success: true, obj });
+
         }
     });
 });

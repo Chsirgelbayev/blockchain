@@ -83,7 +83,7 @@ class Blockchain {
     }
 }
 
-let bitcoin = new Blockchain();
+const Ethereum = new Blockchain();
 
 bitcoin.chainIsValid();
 
