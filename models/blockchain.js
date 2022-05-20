@@ -83,19 +83,19 @@ class Blockchain {
     }
 }
 
-let bitcoin = new Blockchain();
+const Ethereum = new Blockchain();
 
-bitcoin.chainIsValid();
+Ethereum.chainIsValid();
 
 for (i = 0; i < 10; i++) {
-    bitcoin.addNewBlock(
+	Ethereum.addNewBlock(
         new Block(2, "07/04/2022", {
             sender: "Name",
             recipient: "Name",
             quantity: 349,
-            coin: "btc",
+            coin: "eth",
         })
     );
 }
 
-module.exports = bitcoin;
+module.exports = Ethereum;

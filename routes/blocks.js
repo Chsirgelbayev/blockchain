@@ -3,8 +3,8 @@ const router = express.Router();
 
 const { ErrorResponce } = require("../middleware/errorHadler");
 
-const bitcoin = require("../models/blockchain");
-const { blockchain } = bitcoin;
+const Ethereum = require("../models/blockchain");
+const { blockchain } = Ethereum;
 
 router.route("/").get((req, res, next) => {
     if (!blockchain.length) {
