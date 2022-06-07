@@ -5,6 +5,7 @@ const { convertToTimestampZ } = require("../middleware/date");
 const {
     PASSWORD_LENGTH,
     SALT_LENGTH,
+    TRANSACTION_LENGTH,
     ITERATIONS,
     DIGEST,
     BYTE_TO_STRING_ENCODING,
@@ -150,7 +151,7 @@ class Transaction {
                 this.from + this.to + this.amount + JSON.stringify,
                 salt,
                 ITERATIONS,
-                5,
+                TRANSACTION_LENGTH,
                 DIGEST
             )
             .toString(BYTE_TO_STRING_ENCODING);
