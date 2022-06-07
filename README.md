@@ -1,7 +1,7 @@
 # Blockchain
 
 Endpoints:
-#GET BLOCKCHAIN: http://localhost:PORT/chain
-#GET BALANCE: http://localhost:PORT/balance
-#GET TRANSACTION: http://localhost:PORT/transaction/:id
-#POST TRANSACTION: http://localhost:PORT/transaction
+# Get blockchain: http://localhost:PORT/chain
+# Get balance: http://localhost:PORT/balance
+# Get transaction: http://localhost:PORT/transaction/:id
+# Post transaction: http://localhost:PORT/transaction
