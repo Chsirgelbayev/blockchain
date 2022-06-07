@@ -85,7 +85,6 @@ class Blockchain {
     }
 
     minePendTransaction(minerReceiptAdress, reqStart) {
-        const result = this.pendTransactions.filter(object => {});
         let block = new Block(
             convertToTimestampZ(reqStart),
             this.pendTransactions
