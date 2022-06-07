@@ -1,0 +1,9 @@
+version: "3.8"
+services:
+    nodejs:
+        container_name: blockchain
+        build:
+            dockerfile: Dockerfile
+        ports:
+            - "3000:3000"
+            - "9001:9001"

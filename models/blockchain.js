@@ -1,5 +1,7 @@
 const crypto = require("crypto");
 
+const { convertToTimestampZ } = require("../middleware/date");
+
 const {
     PASSWORD_LENGTH,
     SALT_LENGTH,
@@ -8,16 +10,23 @@ const {
     BYTE_TO_STRING_ENCODING,
 } = require("../config/hashConfig.json");
 
+const {
+    COMPARATIVE_INTEGER,
+    GENBLOCK_CURRENT_TIME,
+    GENBLOCK_TRANSACTIONS,
+    GENBLOCK_PREVHASH,
+} = process.env;
+
 class Block {
-    constructor(index, current_time, data, previousHash) {
+    constructor(current_time, transactions, previousHash) {
         const block = this;
 
-        block.index = index;
-        block.current_time = current_time;
-        block.data = data;
-        block.previousHash = previousHash;
-        block.hash = block.calculateHash();
-        block.nonce = 0;
+        this.index = 0;
+        this.current_time = current_time;
+        this.transactions = transactions;
+        this.previousHash = previousHash;
+        this.hash = block.calculateHash();
+        this.nonce = 0;
     }
 
     calculateHash() {
@@ -27,10 +36,10 @@ class Block {
 
         return crypto
             .pbkdf2Sync(
-                this.info +
-                    this.previousHash +
+                this.previousHash +
                     this.current_time +
-                    JSON.stringify(this.info),
+                    this.data +
+                    JSON.stringify,
                 salt,
                 ITERATIONS,
                 PASSWORD_LENGTH,
@@ -39,32 +48,71 @@ class Block {
             .toString(BYTE_TO_STRING_ENCODING);
     }
 
-    addTransactions(transactions) {
-        transactions.list.forEach((transaction) => {
-            this.transactions.push(transaction);
-        });
-        transactions.reset();
+    miner(checkNumLenHash, blockchain, previousHash) {
+        this.index = blockchain.length;
+        this.previousHash = previousHash;
+
+        while (
+            this.hash.substring(0, checkNumLenHash) !==
+            String().padStart(checkNumLenHash, 0)
+        ) {
+            this.hash = this.calculateHash();
+            this.nonce++;
+        }
     }
 }
 
 class Blockchain {
     constructor() {
         this.blockchain = [this.initGenesisBlock()];
+        (this.int = COMPARATIVE_INTEGER),
+            (this.credentials = []),
+            (this.pendTransactions = []),
+            (this.minerReceipt = 100);
     }
 
     initGenesisBlock() {
-        return new Block(0, "0", "0", "0");
+        return new Block(
+            GENBLOCK_CURRENT_TIME,
+            GENBLOCK_TRANSACTIONS,
+            GENBLOCK_PREVHASH
+        );
     }
 
     latestBlock() {
         return this.blockchain[this.blockchain.length - 1];
     }
 
-    addNewBlock(newBlock) {
-        newBlock.index = this.latestBlock().index + 1;
-        newBlock.previousHash = this.latestBlock().hash;
-        newBlock.hash = newBlock.calculateHash();
-        this.blockchain.push(newBlock);
+    minePendTransaction(minerReceiptAdress, reqStart) {
+        const result = this.pendTransactions.filter(object => {});
+        let block = new Block(
+            convertToTimestampZ(reqStart),
+            this.pendTransactions
+        );
+        block.miner(this.int, this.blockchain, this.latestBlock().hash);
+        this.blockchain.push(block);
+    }
+
+    createTransactions(transaction) {
+        this.pendTransactions.push(transaction);
+    }
+
+    getBalance(adress) {
+        let balance = 0;
+
+        for (const block of this.blockchain) {
+            for (const transaction of block.transactions) {
+                if (transaction.from === adress) {
+                    balance -= transaction.amount;
+                }
+
+                if (transaction.to === adress) {
+                    balance += transaction.amount;
+                }
+            }
+        }
+
+        return balance;
     }
 
     chainIsValid() {
@@ -79,23 +127,37 @@ class Blockchain {
                 return false;
             }
         }
+
         return true;
     }
 }
 
-const Ethereum = new Blockchain();
+class Transaction {
+    constructor(from, to, amount) {
+        this.from = from;
+        this.to = to;
+        this.amount = amount;
+        this._id = this.calculateHash();
+    }
 
-Ethereum.chainIsValid();
+    calculateHash() {
+        const salt = crypto
+            .randomBytes(SALT_LENGTH)
+            .toString(BYTE_TO_STRING_ENCODING);
 
-for (i = 0; i < 10; i++) {
-	Ethereum.addNewBlock(
-        new Block(2, "07/04/2022", {
-            sender: "Name",
-            recipient: "Name",
-            quantity: 349,
-            coin: "eth",
-        })
-    );
+        return crypto
+            .pbkdf2Sync(
+                this.from + this.to + this.amount + JSON.stringify,
+                salt,
+                ITERATIONS,
+                5,
+                DIGEST
+            )
+            .toString(BYTE_TO_STRING_ENCODING);
+    }
 }
 
-module.exports = Ethereum;
+module.exports = {
+    Blockchain,
+    Transaction,
+};

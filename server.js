@@ -1,27 +1,50 @@
 const express = require("express");
 const morgan = require("morgan");
 const colors = require("colors");
+const prometheus = require("express-prometheus-middleware");
 const dotenv = require("dotenv");
-
 dotenv.config({ path: "./config/config.env" });
-const { PORT, NODE_ENV } = process.env;
+
+const promeConfig = require("./config/promConfig");
 const { errorHandler } = require("./middleware/errorHadler");
-const blockchain = require("./routes/blocks");
+const { reqStart } = require("./middleware/date");
+const { PORT, METRICS_PORT, NODE_ENV } = process.env;
+
+const {
+    getChain,
+    getTransaction,
+    createTransaction,
+    getBalance,
+} = require("./controllers/chain");
 
 const app = express();
+const metricsApp = express();
 
-app.use(morgan("dev"));
+metricsApp.use(prometheus(promeConfig));
 
-app.use("/ethereum", blockchain).use(errorHandler);
+app.use(express.json())
+    .use(morgan("dev"))
+    .use(reqStart)
+    .get("/chain", getChain)
+    .get("/transaction/:id", getTransaction)
+    .get("/balance", getBalance)
+    .post("/transaction", createTransaction)
+    .use(errorHandler);
 
-const server = app.listen(PORT || 5200, () =>
+const server = app.listen(PORT || 3001, () =>
     console.log(
-        `Listening http on port: ${PORT} and running in ${NODE_ENV} mode`.white
-            .bgCyan
+        `Server running in ${NODE_ENV} mode on ${PORT} PORT`.white.bgCyan
     )
 );
 
-process.on("unhandledRejection", (e) => {
-    console.log(`Error: ${e.message}`.red.underline.bold);
-    server.close(() => process.exit(1));
+const metricServer = metricsApp.listen(METRICS_PORT || 3001);
+
+process.removeAllListeners("warning");
+
+process.on("unhandledRejection", e => {
+    console.log(`Error: ${e}`.red);
+
+    server.close(() => {
+        metricServer.close(() => process.exit(1));
+    });
 });
