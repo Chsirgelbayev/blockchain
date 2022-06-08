@@ -31,13 +31,13 @@ app.use(express.json())
     .post("/transaction", createTransaction)
     .use(errorHandler);
 
-const server = app.listen(PORT || 3001, () =>
+const server = app.listen(PORT || 3000, () =>
     console.log(
         `Server running in ${NODE_ENV} mode on ${PORT} PORT`.white.bgCyan
     )
 );
 
-const metricServer = metricsApp.listen(METRICS_PORT || 3001);
+const metricServer = metricsApp.listen(METRICS_PORT || 9001);
 
 process.removeAllListeners("warning");
 
