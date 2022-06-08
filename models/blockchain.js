@@ -29,12 +29,12 @@ class Block {
         block.current_time = current_time;
         block.transactions = transactions;
         block.previousHash = previousHash;
-        block.hash = block.calculateHash();
+        block.hash = block.createHash();
         block.nonce = 0;
     }
 
 
-    calculateHash() {
+    createHash() {
         const salt = crypto
             .randomBytes(SALT_LENGTH)
             .toString(BYTE_TO_STRING_ENCODING);
@@ -64,7 +64,7 @@ class Block {
             this.hash.substring(0, checkNumLenHash) !==
             String().padStart(checkNumLenHash, 0)
         ) {
-            this.hash = this.calculateHash();
+            this.hash = this.createHash();
             this.nonce++;
         }
     }
@@ -72,14 +72,14 @@ class Block {
 
 class Blockchain {
     constructor() {
-        this.blockchain = [this.initGenesisBlock()];
+        this.blockchain = [this.createStartBlock()];
         (this.int = COMPARATIVE_INTEGER),
         (this.credentials = []),
         (this.pendTransactions = []);
     }
 
 
-    initGenesisBlock() {
+    createStartBlock() {
         return new Block(
             GENBLOCK_CURRENT_TIME,
             GENBLOCK_TRANSACTIONS,
@@ -93,7 +93,7 @@ class Blockchain {
     }
 
 
-    minePendTransaction(minerReceiptAdress, reqStart) {
+    currentTransaction(minerReceiptAdress, reqStart) {
         let block = new Block(
             convertToTimestampZ(reqStart),
             this.pendTransactions
@@ -110,7 +110,7 @@ class Blockchain {
     }
 
 
-    getBalance(adress) {
+    balance(adress) {
         let balance = 0;
 
 
@@ -136,7 +136,7 @@ class Blockchain {
             const currentBlock = this.blockchain[i];
             const previousBlock = this.blockchain[i - 1];
 
-            if (currentBlock.hash !== currentBlock.calculateHash()) {
+            if (currentBlock.hash !== currentBlock.createHash()) {
                 return false;
             }
             if (currentBlock.previousHash !== previousBlock.hash) {
@@ -156,16 +156,16 @@ class Transaction {
         transaction.from = from;
         transaction.to = to;
         transaction.amount = amount;
-        transaction._id = this.calculateHash();
+        transaction._id = this.createHash();
     }
 
 
-    calculateHash() {
+    createHash() {
         const salt = crypto
             .randomBytes(SALT_LENGTH)
             .toString(BYTE_TO_STRING_ENCODING);
 
-						
+
         return crypto
             .pbkdf2Sync(
                 this.from + this.to + this.amount + JSON.stringify,

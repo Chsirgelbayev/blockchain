@@ -87,7 +87,7 @@ const createTransaction = (req, res, next) => {
 
     Ethereum.createTransactions(transaction);
 
-    Ethereum.minePendTransaction(email, req.start);
+    Ethereum.currentTransaction(email, req.start);
 
     res.status(201).json({
         data: transaction
@@ -102,7 +102,7 @@ const getBalance = (req, res, next) => {
     }
 
     res.status(200).json({
-        balance: Ethereum.getBalance(email)
+        balance: Ethereum.balance(email)
     });
 };
 
