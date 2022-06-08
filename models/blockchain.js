@@ -1,7 +1,6 @@
 const crypto = require('crypto');
 const { convertToTimestampZ } = require('../middleware/date');
 
-
 const {
     PASSWORD_LENGTH,
     SALT_LENGTH,
@@ -11,14 +10,12 @@ const {
     BYTE_TO_STRING_ENCODING,
 } = require('../config/hashConfig.json');
 
-
 const {
     COMPARATIVE_INTEGER,
     GENBLOCK_CURRENT_TIME,
     GENBLOCK_TRANSACTIONS,
     GENBLOCK_PREVHASH,
 } = process.env;
-
 
 class Block {
     constructor(current_time, transactions, previousHash) {
