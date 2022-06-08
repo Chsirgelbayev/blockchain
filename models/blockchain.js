@@ -22,12 +22,12 @@ class Block {
     constructor(current_time, transactions, previousHash) {
         const block = this;
 
-        this.index = 0;
-        this.current_time = current_time;
-        this.transactions = transactions;
-        this.previousHash = previousHash;
-        this.hash = block.calculateHash();
-        this.nonce = 0;
+        block.index = 0;
+        block.current_time = current_time;
+        block.transactions = transactions;
+        block.previousHash = previousHash;
+        block.hash = block.calculateHash();
+        block.nonce = 0;
     }
 
     calculateHash() {
@@ -134,10 +134,12 @@ class Blockchain {
 
 class Transaction {
     constructor(from, to, amount) {
-        this.from = from;
-        this.to = to;
-        this.amount = amount;
-        this._id = this.calculateHash();
+        const transaction = this;
+
+        transaction.from = from;
+        transaction.to = to;
+        transaction.amount = amount;
+        transaction._id = this.calculateHash();
     }
 
     calculateHash() {
