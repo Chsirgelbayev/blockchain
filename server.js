@@ -2,8 +2,6 @@ const express = require('express');
 const morgan = require('morgan');
 const colors = require('colors');
 const prometheus = require('express-prometheus-middleware');
-const dotenv = require('dotenv');
-dotenv.config({ path: './config/config.env' });
 
 const promeConfig = require('./config/promConfig');
 const { errorHandler } = require('./middleware/errorHadler');
