@@ -11,7 +11,7 @@ const getChain = (req, res, next) => {
 
     res.status(200).json({
         success: true,
-        blockchain,
+        blockchain
     });
 };
 
@@ -87,7 +87,7 @@ const createTransaction = (req, res, next) => {
     Ethereum.minePendTransaction(email, req.start);
 
     res.status(201).json({
-        data: transaction,
+        data: transaction
     });
 };
 
@@ -99,7 +99,7 @@ const getBalance = (req, res, next) => {
     }
 
     res.status(200).json({
-        balance: Ethereum.getBalance(email),
+        balance: Ethereum.getBalance(email)
     });
 };
 
@@ -107,5 +107,5 @@ module.exports = {
     getChain,
     createTransaction,
     getTransaction,
-    getBalance,
+    getBalance
 };

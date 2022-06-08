@@ -161,5 +161,5 @@ class Transaction {
 
 module.exports = {
     Blockchain,
-    Transaction,
+    Transaction
 };

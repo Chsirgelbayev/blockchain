@@ -14,7 +14,7 @@ const {
     getChain,
     getTransaction,
     createTransaction,
-    getBalance,
+    getBalance
 } = require('./controllers/chain');
 
 const app = express();
