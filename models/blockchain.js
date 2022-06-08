@@ -1,6 +1,6 @@
-const crypto = require("crypto");
+const crypto = require('crypto');
 
-const { convertToTimestampZ } = require("../middleware/date");
+const { convertToTimestampZ } = require('../middleware/date');
 
 const {
     PASSWORD_LENGTH,
@@ -9,7 +9,7 @@ const {
     ITERATIONS,
     DIGEST,
     BYTE_TO_STRING_ENCODING,
-} = require("../config/hashConfig.json");
+} = require('../config/hashConfig.json');
 
 const {
     COMPARATIVE_INTEGER,
@@ -67,9 +67,9 @@ class Blockchain {
     constructor() {
         this.blockchain = [this.initGenesisBlock()];
         (this.int = COMPARATIVE_INTEGER),
-            (this.credentials = []),
-            (this.pendTransactions = []),
-            (this.minerReceipt = 100);
+        (this.credentials = []),
+        (this.pendTransactions = []),
+        (this.minerReceipt = 100);
     }
 
     initGenesisBlock() {

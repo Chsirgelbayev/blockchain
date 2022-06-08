@@ -1,12 +1,12 @@
-const { ErrorResponce } = require("../middleware/errorHadler");
-const { Transaction, Blockchain } = require("../models/blockchain");
+const { ErrorResponce } = require('../middleware/errorHadler');
+const { Transaction, Blockchain } = require('../models/blockchain');
 
 const Ethereum = new Blockchain();
 const { blockchain } = Ethereum;
 
 const getChain = (req, res, next) => {
     if (!blockchain.length) {
-        return next(new ErrorResponce(`Blockchain empty`, 404));
+        return next(new ErrorResponce('Blockchain empty', 404));
     }
 
     res.status(200).json({
@@ -17,7 +17,7 @@ const getChain = (req, res, next) => {
 
 const getTransaction = (req, res, next) => {
     if (!blockchain.length) {
-        return next(new ErrorResponce(`Blockchain empty`, 404));
+        return next(new ErrorResponce('Blockchain empty', 404));
     }
 
     const searchTransaction = chain => {
@@ -37,7 +37,7 @@ const getTransaction = (req, res, next) => {
     const transaction = searchTransaction(blockchain);
 
     if (!transaction) {
-        return next(new ErrorResponce(`Transaction not found`, 404));
+        return next(new ErrorResponce('Transaction not found', 404));
     }
 
     res.status(200).json({ transaction });
@@ -48,7 +48,7 @@ const createTransaction = (req, res, next) => {
     const { transactions } = Ethereum.latestBlock();
 
     if (!email || !amount) {
-        return next(new ErrorResponce("Please enter data"), 400);
+        return next(new ErrorResponce('Please enter data'), 400);
     }
 
     const validateEmail = email => {
@@ -65,7 +65,7 @@ const createTransaction = (req, res, next) => {
         validateEmail(email) === null
     ) {
         return next(
-            new ErrorResponce("Invalid email, please enter a valid email"),
+            new ErrorResponce('Invalid email, please enter a valid email'),
             400
         );
     }
@@ -95,7 +95,7 @@ const getBalance = (req, res, next) => {
     const { email } = req.body;
 
     if (!email) {
-        return next(new ErrorResponce("Please enter data"), 400);
+        return next(new ErrorResponce('Please enter data'), 400);
     }
 
     res.status(200).json({
