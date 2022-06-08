@@ -9,7 +9,6 @@ const getChain = (req, res, next) => {
         return next(new ErrorResponce('Blockchain empty', 404));
     }
 
-
     res.status(200).json({
         success: true,
         blockchain
@@ -20,7 +19,6 @@ const getTransaction = (req, res, next) => {
     if (!blockchain.length) {
         return next(new ErrorResponce('Blockchain empty', 404));
     }
-
 
     const searchTransaction = chain => {
         let result;
@@ -37,7 +35,6 @@ const getTransaction = (req, res, next) => {
     };
 
     const transaction = searchTransaction(blockchain);
-
 
     if (!transaction) {
         return next(new ErrorResponce('Transaction not found', 404));
