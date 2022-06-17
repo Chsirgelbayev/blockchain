@@ -32,7 +32,7 @@ app
     .post('/transaction', createTransaction)
     .use(errorHandler);
 
-const server = app.listen(PORT || 3000, () =>
+const server = app.listen(PORT || 3001, () =>
     console.log(
         `Server running in ${NODE_ENV} mode on ${PORT} PORT`.white.bgCyan
     )

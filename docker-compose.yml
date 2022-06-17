@@ -1,9 +1,84 @@
-version: "3.8"
+version: '3.8'
+networks:
+  monitoring:
+    driver: bridge
+volumes:
+    prometheus_data: {}
+    grafana_data: {}
 services:
     nodejs:
         container_name: blockchain
         build:
+            context: .
             dockerfile: Dockerfile
         ports:
-            - "3000:3000"
-            - "9001:9001"
+            - '3001:3001'
+            - '9001:9001'
+    mongodb:
+        image: mongo:3
+        container_name: mongodb
+    prometheus:
+        image: prom/prometheus:latest
+        container_name: prometheus
+        volumes:
+            - ./prometheus/:/etc/prometheus/
+        command: --config.file=/etc/prometheus/prometheus.yml
+        ports:
+            - 9090:9090
+        expose:
+            - 9090
+        networks:
+            - monitoring
+    grafana:
+        image: grafana/grafana:latest
+        container_name: grafana
+        volumes:
+            - grafana_data:/var/lib/grafana
+            - ./grafana/provisioning:/etc/grafana/provisioning
+        environment:
+            - GF_AUTH_DISABLE_LOGIN_FORM=true
+            - GF_AUTH_ANONYMOUS_ENABLED=true
+            - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+        ports:
+            - 3000:3000
+        expose:
+            - 3000
+        networks:
+            - monitoring
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.12.0
+        container_name: elastic
+        environment:
+            - http.host=0.0.0.0
+            - transport.host=localhost
+            - network.host=0.0.0.0
+            - xpack.security.enabled=false
+            - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        mem_limit: 1g
+    graylog:
+        image: graylog/graylog:4.3-jre11
+        container_name: graylog
+        environment:
+            - GRAYLOG_PASSWORD_SECRET=somepasswordpepper
+            - GRAYLOG_ROOT_PASSWORD_SHA2=8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
+            - GRAYLOG_HTTP_BIND_ADDRESS=0.0.0.0:9000
+        links:
+            - mongodb:mongo
+            - elasticsearch
+        depends_on:
+            - mongodb
+            - elasticsearch
+        ports:
+            - 9000:9000
+            # Syslog TCP
+            - 514:514
+            # Syslog UDP
+            - 514:514/udp
+            # GELF TCP
+            - 12201:12201
+            # GELF UDP
+            - 12201:12201/udp

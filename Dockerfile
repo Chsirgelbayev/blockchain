@@ -4,7 +4,7 @@ RUN mkdir -p /usr/src/app
 
 WORKDIR /usr/src/app
 
-ENV	PORT=3000
+ENV	PORT=3001
 ENV 	METRICS_PORT=9001
 ENV	NODE_ENV=dev
 ENV	COMPARATIVE_INTEGER=2
@@ -16,7 +16,7 @@ COPY package.json /usr/src/app
 
 RUN npm install
 
-EXPOSE 3000 9001
+EXPOSE 3001 9001
 
 COPY . /usr/src/app
 
