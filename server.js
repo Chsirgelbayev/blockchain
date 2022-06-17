@@ -4,7 +4,6 @@ const colors = require('colors');
 const prometheus = require('express-prometheus-middleware');
 const dotenv = require('dotenv');
 
-
 dotenv.config({ path: './config/config.env' });
 const promeConfig = require('./config/promConfig');
 const { errorHandler } = require('./middleware/errorHadler');
@@ -23,7 +22,8 @@ const metricsApp = express();
 
 metricsApp.use(prometheus(promeConfig));
 
-app.use(express.json())
+app
+    .use(express.json())
     .use(morgan('dev'))
     .use(reqStart)
     .get('/chain', getChain)
