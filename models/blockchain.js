@@ -7,19 +7,18 @@ const {
     TRANSACTION_LENGTH,
     ITERATIONS,
     DIGEST,
-    BYTE_TO_STRING_ENCODING,
+    BYTE_TO_STRING_ENCODING
 } = require('../config/hashConfig.json');
 
 const {
     COMPARATIVE_INTEGER,
     GENBLOCK_CURRENT_TIME,
     GENBLOCK_TRANSACTIONS,
-    GENBLOCK_PREVHASH,
+    GENBLOCK_PREVHASH
 } = process.env;
 
 class Block {
     constructor(current_time, transactions, previousHash) {
-
         const block = this;
 
         block.index = 0;
@@ -30,12 +29,10 @@ class Block {
         block.nonce = 0;
     }
 
-
     createHash() {
         const salt = crypto
             .randomBytes(SALT_LENGTH)
             .toString(BYTE_TO_STRING_ENCODING);
-
 
         return crypto
             .pbkdf2Sync(
@@ -51,11 +48,9 @@ class Block {
             .toString(BYTE_TO_STRING_ENCODING);
     }
 
-
     miner(checkNumLenHash, blockchain, previousHash) {
         this.index = blockchain.length;
         this.previousHash = previousHash;
-
 
         while (
             this.hash.substring(0, checkNumLenHash) !==
@@ -75,7 +70,6 @@ class Blockchain {
         (this.pendTransactions = []);
     }
 
-
     createStartBlock() {
         return new Block(
             GENBLOCK_CURRENT_TIME,
@@ -84,11 +78,9 @@ class Blockchain {
         );
     }
 
-
     latestBlock() {
         return this.blockchain[this.blockchain.length - 1];
     }
-
 
     currentTransaction(minerReceiptAdress, reqStart) {
         let block = new Block(
@@ -96,20 +88,16 @@ class Blockchain {
             this.pendTransactions
         );
 
-
         block.miner(this.int, this.blockchain, this.latestBlock().hash);
         this.blockchain.push(block);
     }
-
 
     createTransactions(transaction) {
         this.pendTransactions.push(transaction);
     }
 
-
     balance(adress) {
         let balance = 0;
-
 
         for (const block of this.blockchain) {
             for (const transaction of block.transactions) {
@@ -123,10 +111,8 @@ class Blockchain {
             }
         }
 
-
         return balance;
     }
-
 
     chainIsValid() {
         for (let i = 1; i < this.blockchain.length; i++) {
@@ -147,21 +133,18 @@ class Blockchain {
 
 class Transaction {
     constructor(from, to, amount) {
-
         const transaction = this;
 
         transaction.from = from;
         transaction.to = to;
         transaction.amount = amount;
-        transaction._id = this.createHash();
+        transaction._id = this.createID();
     }
 
-
-    createHash() {
+    createID() {
         const salt = crypto
             .randomBytes(SALT_LENGTH)
             .toString(BYTE_TO_STRING_ENCODING);
-
 
         return crypto
             .pbkdf2Sync(

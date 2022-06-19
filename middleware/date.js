@@ -16,7 +16,29 @@ const convertToTimestampZ = timestamp => {
     }
 };
 
+const createDateNow = (year, month, numDate) => {
+    let today;
+
+    if (year && month && numDate) {
+        today = new Date(year, month, numDate);
+    } else {
+        today = new Date();
+    }
+
+    const date =
+        today.getFullYear() +
+        '-' +
+        (today.getMonth() + 1) +
+        '-' +
+        today.getDate();
+    const time =
+        today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+
+    return `${date} ${time}`;
+};
+
 module.exports = {
     reqStart,
     convertToTimestampZ,
+    createDateNow
 };

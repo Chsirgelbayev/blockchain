@@ -22,8 +22,7 @@ const metricsApp = express();
 
 metricsApp.use(prometheus(promeConfig));
 
-app
-    .use(express.json())
+app.use(express.json())
     .use(morgan('dev'))
     .use(reqStart)
     .get('/chain', getChain)
@@ -33,9 +32,7 @@ app
     .use(errorHandler);
 
 const server = app.listen(PORT || 3001, () =>
-    console.log(
-        `Server running in ${NODE_ENV} mode on ${PORT} PORT`.white.bgCyan
-    )
+    console.log(`Server running in ${NODE_ENV} mode on ${PORT} PORT`.bgWhite)
 );
 
 const metricServer = metricsApp.listen(METRICS_PORT || 9001);

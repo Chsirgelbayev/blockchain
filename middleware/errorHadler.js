@@ -1,3 +1,5 @@
+const { sendLogs } = require('../utils/logs');
+
 class ErrorResponce extends Error {
     constructor(message, statusCode) {
         super(message);
@@ -19,10 +21,15 @@ const errorHandler = (err, req, res, next) => {
         error = new ErrorResponce(message, 500);
     }
 
-    res.status(err.statusCode || 500).json({
-        success: false,
-        error: error.message || 'Server has an error'
-    });
+    sendLogs(
+        req,
+        res,
+        {
+            success: false,
+            error: error.message || 'Server has an error'
+        },
+        error.statusCode || 500
+    );
 };
 
 module.exports = {

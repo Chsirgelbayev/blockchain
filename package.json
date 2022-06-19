@@ -7,13 +7,14 @@
         "lint": "eslint .",
         "lint-fix": "eslint . --fix",
         "start": "node server.js",
-        "prod": "cross-env NODE_ENV=production node server.js",
-        "dev": "cross-env NODE_ENV=development nodemon server.js",
+        "prod": "cross-env NODE_ENV=prod node server.js",
+        "dev": "cross-env NODE_ENV=dev nodemon server.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "Chingiz",
     "license": "ISC",
     "dependencies": {
+        "axios": "^0.27.2",
         "colors": "^1.4.0",
         "cross-env": "^7.0.3",
         "dotenv": "^16.0.1",

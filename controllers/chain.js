@@ -1,6 +1,6 @@
 const { ErrorResponce } = require('../middleware/errorHadler');
 const { Transaction, Blockchain } = require('../models/blockchain');
-
+const { sendLogs } = require('../utils//logs');
 const Ethereum = new Blockchain();
 const { blockchain } = Ethereum;
 
@@ -9,10 +9,15 @@ const getChain = (req, res, next) => {
         return next(new ErrorResponce('Blockchain empty', 404));
     }
 
-    res.status(200).json({
-        success: true,
-        blockchain
-    });
+    sendLogs(
+        req,
+        res,
+        {
+            success: true,
+            blockchain
+        },
+        200
+    );
 };
 
 const getTransaction = (req, res, next) => {
@@ -40,7 +45,14 @@ const getTransaction = (req, res, next) => {
         return next(new ErrorResponce('Transaction not found', 404));
     }
 
-    res.status(200).json({ transaction });
+    sendLogs(
+        req,
+        res,
+        {
+            transaction
+        },
+        200
+    );
 };
 
 const createTransaction = (req, res, next) => {
@@ -86,9 +98,14 @@ const createTransaction = (req, res, next) => {
 
     Ethereum.currentTransaction(email, req.start);
 
-    res.status(201).json({
-        data: transaction
-    });
+    sendLogs(
+        req,
+        res,
+        {
+            transaction
+        },
+        201
+    );
 };
 
 const getBalance = (req, res, next) => {
@@ -98,9 +115,14 @@ const getBalance = (req, res, next) => {
         return next(new ErrorResponce('Please enter data'), 400);
     }
 
-    res.status(200).json({
-        balance: Ethereum.balance(email)
-    });
+    sendLogs(
+        req,
+        res,
+        {
+            balance: Ethereum.balance(email)
+        },
+        200
+    );
 };
 
 module.exports = {
