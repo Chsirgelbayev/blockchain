@@ -22,14 +22,15 @@ const metricsApp = express();
 
 metricsApp.use(prometheus(promeConfig));
 
-app.use(express.json())
-    .use(morgan('dev'))
-    .use(reqStart)
-    .get('/chain', getChain)
-    .get('/transaction/:id', getTransaction)
-    .get('/balance', getBalance)
-    .post('/transaction', createTransaction)
-    .use(errorHandler);
+app
+    .use(express.json())
+  	.use(morgan('dev'))
+  	.use(reqStart)
+  	.get('/chain', getChain)
+  	.get('/transaction/:id', getTransaction)
+  	.get('/balance', getBalance)
+  	.post('/transaction', createTransaction)
+  	.use(errorHandler);
 
 const server = app.listen(PORT || 3001, () =>
     console.log(`Server running in ${NODE_ENV} mode on ${PORT} PORT`.bgWhite)
