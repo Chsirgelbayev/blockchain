@@ -38,7 +38,6 @@ const server = app.listen(PORT || 3001, () =>
 
 const metricServer = metricsApp.listen(METRICS_PORT || 9001);
 
-process.removeAllListeners('warning');
 
 process.on('unhandledRejection', e => {
     console.log(`Error: ${e}`.red);
