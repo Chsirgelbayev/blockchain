@@ -5,7 +5,7 @@ const prometheus = require('express-prometheus-middleware');
 const dotenv = require('dotenv');
 
 dotenv.config({ path: './config/config.env' });
-const promeConfig = require('./config/promConfig');
+const metricsConfig = require('./config/metricsConfig');
 const { errorHandler } = require('./middleware/errorHadler');
 const { reqStart } = require('./middleware/date');
 const { PORT, METRICS_PORT, NODE_ENV } = process.env;
@@ -20,7 +20,7 @@ const {
 const app = express();
 const metricsApp = express();
 
-metricsApp.use(prometheus(promeConfig));
+metricsApp.use(prometheus(metricsConfig));
 
 app
     .use(express.json())
@@ -46,3 +46,5 @@ process.on('unhandledRejection', e => {
         metricServer.close(() => process.exit(1));
     });
 });
+
+process.noDeprecation = true;
